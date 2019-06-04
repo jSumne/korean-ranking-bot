@@ -70,9 +70,10 @@
       }
     });
     const lowerXPositions = [...xPositions.filter(x => x < ev.x)];
-    const item = imageGroups[old_g].items.splice(i, 1)[0];
-    imageGroups[new_g].items.splice(lowerXPositions.length, 0, item);
-    $: imageGroups = imageGroups;
+    const imageGroupCopy = [...imageGroups];
+    const item = imageGroupCopy[old_g].items.splice(i, 1)[0];
+    imageGroupCopy[new_g].items.splice(lowerXPositions.length, 0, item);
+    imageGroups = [...imageGroupCopy];
   };
 
   let addRowClass = (row, index) => {
