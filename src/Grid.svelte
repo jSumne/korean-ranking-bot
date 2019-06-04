@@ -46,18 +46,21 @@
     { name: "🤢", items: [] },
     { items: images }
   ];
-  function dragstart(ev, group, item) {
-    ev.dataTransfer.setData("group", group);
-    ev.dataTransfer.setData("item", item);
-  }
-  function dragover(ev) {
+  const dragstart = (ev, group, item) => {
+    ev.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({ group: group, item: item })
+    );
+  };
+  const dragover = ev => {
     ev.preventDefault();
     ev.dataTransfer.dropEffect = "move";
-  }
-  function drop(ev, new_g) {
+  };
+  const drop = (ev, new_g) => {
     ev.preventDefault();
-    const i = +ev.dataTransfer.getData("item");
-    const old_g = +ev.dataTransfer.getData("group");
+    var data = JSON.parse(ev.dataTransfer.getData("text/plain"));
+    const i = +data.item;
+    const old_g = +data.group;
     const xPositions = [];
     imageGroups[new_g].items.forEach((image, index) => {
       if (!(new_g === old_g && index === i)) {
@@ -70,7 +73,7 @@
     const item = imageGroups[old_g].items.splice(i, 1)[0];
     imageGroups[new_g].items.splice(lowerXPositions.length, 0, item);
     $: imageGroups = imageGroups;
-  }
+  };
 
   let addRowClass = (row, index) => {
     if (!row.name) {
